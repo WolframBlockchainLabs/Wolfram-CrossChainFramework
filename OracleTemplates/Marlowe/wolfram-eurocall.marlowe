@@ -1,0 +1,116 @@
+Let
+    "strike_ada"
+    (Constant 1000)
+    (Let
+        "premium_ada"
+        (Constant 100)
+        (Let
+            "notional_btc"
+            (Constant 2)
+            (Let
+                "threshold"
+                (AddValue
+                    (UseValue "strike_ada")
+                    (DivValue
+                        (UseValue "premium_ada")
+                        (UseValue "notional_btc")
+                    )
+                )
+                (Let
+                    "margin_ada"
+                    (Constant 300)
+                    (When
+                        [Case
+                            (Deposit
+                                (Role "Bob")
+                                (Role "Alice")
+                                (Token "" "")
+                                (MulValue
+                                    (UseValue "premium_ada")
+                                    (Constant 1000000)
+                                )
+                            )
+                            (When
+                                [Case
+                                    (Deposit
+                                        (Role "Bob")
+                                        (Role "Bob")
+                                        (Token "" "")
+                                        (MulValue
+                                            (UseValue "margin_ada")
+                                            (Constant 1000000)
+                                        )
+                                    )
+                                    (When
+                                        [Case
+                                            (Choice
+                                                (ChoiceId
+                                                    "DO NOT ENTER, SKIP TO NEXT TIMEOUT INSTEAD"
+                                                    (Address "invalid1vrxx3rjangevudlrejgp9m508uc26jd02n7lmdz365n4wrca35y5j")
+                                                )
+                                                [Bound 0 0]
+                                            )
+                                            Close ]
+                                        1000000100000001
+                                        (When
+                                            [Case
+                                                (Choice
+                                                    (ChoiceId
+                                                        "WOLF_BTCADA"
+                                                        (Address "addr_test1vrxx3rjangevudlrejgp9m508uc26jd02n7lmdz365n4wrca35y5j")
+                                                    )
+                                                    [Bound 0 1000000]
+                                                )
+                                                (Let
+                                                    "market_ada"
+                                                    (ChoiceValue
+                                                        (ChoiceId
+                                                            "WOLF_BTCADA"
+                                                            (Address "addr_test1vrxx3rjangevudlrejgp9m508uc26jd02n7lmdz365n4wrca35y5j")
+                                                        ))
+                                                    (Let
+                                                        "value_ada"
+                                                        (MulValue
+                                                            (UseValue "notional_btc")
+                                                            (SubValue
+                                                                (UseValue "market_ada")
+                                                                (UseValue "strike_ada")
+                                                            )
+                                                        )
+                                                        (Let
+                                                            "alice_profit"
+                                                            (SubValue
+                                                                (UseValue "value_ada")
+                                                                (UseValue "premium_ada")
+                                                            )
+                                                            (If
+                                                                (ValueLE
+                                                                    (UseValue "value_ada")
+                                                                    (Constant 0)
+                                                                )
+                                                                Close 
+                                                                (Pay
+                                                                    (Role "Bob")
+                                                                    (Account (Role "Alice"))
+                                                                    (Token "" "")
+                                                                    (MulValue
+                                                                        (UseValue "value_ada")
+                                                                        (Constant 1000000)
+                                                                    )
+                                                                    Close 
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                )]
+                                            1000000100000002 Close 
+                                        )
+                                    )]
+                                1000000000000002 Close 
+                            )]
+                        1000000000000001 Close 
+                    )
+                )
+            )
+        )
+    )
